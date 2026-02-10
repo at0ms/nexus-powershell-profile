@@ -1,2 +1,66 @@
-# nexus-powershell-profile
-A lightweight PowerShell profile emphasizing readability, streamlined workflow, and distraction‑free use.
+# \# Nexus Powershell Profile
+
+# 
+
+# A lightweight PowerShell profile emphasizing readability, streamlined workflow, and distraction‑free use. 
+
+# 
+
+# !\[Preview](https://github.com/at0ms/nexus-powershell-profile/assets/preview1.png)
+
+# 
+
+# \## Installation
+
+# 
+
+# \### Manual Installation
+
+# 1\. Download or clone this repository.
+
+# 2\. Create a folder named WindowsPowerShell in your user Documents directory (if it doesn’t already exist).
+
+# 3\. Copy `Microsoft.PowerShell\_profile.ps1` from the repo into that folder.
+
+# 4\. Open a new PowerShell session to load the profile.
+
+# 5\. Verify that the profile loaded by running `psi` and pressing Enter.
+
+# 6\. Profit.
+
+# 
+
+# \## Features
+
+# \* Removes the nag message prompting you to install the latest PowerShell version.
+
+# \* Prevents sensitive information from being written to command history.
+
+# \* Customizes PSReadLine colors to match a blue aesthetic.
+
+# \* Loads an Oh My Posh theme from the profile directory. If none is found, it attempts to download one; if that fails, it falls back to a remote theme.
+
+# > More features are on the way. Feel free to jump in and contribute.
+
+# 
+
+# \## Contributing
+
+# 
+
+# Pull requests are welcome. For major changes, please open an issue first
+
+# to discuss what you would like to change.
+
+# 
+
+# Please make sure to test your code before submitting a pull request. 
+
+# 
+
+# \## License
+
+# 
+
+# \[GNU GPL v3](https://choosealicense.com/licenses/gpl-3.0/)
+
