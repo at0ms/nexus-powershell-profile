@@ -2,8 +2,11 @@
 
 A lightweight PowerShell profile emphasizing readability, streamlined workflow, and distraction‑free use. 
 
-![Preview](https://github.com/at0ms/nexus-powershell-profile/assets/preview1.png)
-
+## Preview
+<p align="center">
+ <img src="https://raw.githubusercontent.com/at0ms/nexus-powershell-profile/refs/heads/main/assets/preview1.png" width="700" height="700">
+<p>
+  
 ## Installation
 
 ### Manual Installation
