@@ -1,8 +1,8 @@
-﻿### Nexus Powershell Profile
-### Version: 1.0
+﻿### Powershell Profile
+### Version: 1.0.1
 
 # Global Variables
-$Global:VersionStr = "1.0"
+$Global:VersionStr = "1.0.1"
 
 # Clear Console
 Clear-Host
@@ -17,6 +17,7 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 
 #region Utility Functions
+# Helper function for cross-edition compatibility
 function Get-ProfileDir { # Credit: github.com/ChrisTitusTech
     if ($PSVersionTable.PSEdition -eq "Core") {
         return [Environment]::GetFolderPath("MyDocuments") + "\PowerShell"
@@ -99,12 +100,23 @@ Set-PSReadLineOption -AddToHistoryHandler { # Credit: github.com/ChrisTitusTech
 }
 #endregion
 
+#region Help Message
 function Show-Help {
     # Header
     Write-Host " " # Empty Line
     Write-Host "┌──────────────────────────────────────────────────────┐"
     Write-Host "│" -NoNewLine; Write-Host "                         Help                         " -ForegroundColor "Blue" -NoNewLine; Write-Host "│"
     Write-Host "└──────────────────────────────────────────────────────┘"
+    Write-Host " " # Empty Line
+
+    # Information
+    Write-Host "   ┌────────────────────────────────────────────────┐"
+    Write-Host "   │                     General                    │"
+    Write-Host "   └────────────────────────────────────────────────┘"
+    Write-Host " " # Empty Line
+
+    Write-Host "  psh" -ForegroundColor "Green" -NoNewLine; Write-Host " - Shows this help message."
+    Write-Host "  psi" -ForegroundColor "Green" -NoNewLine; Write-Host " - Shows infomation about the script."
     Write-Host " " # Empty Line
 
     # Information
@@ -126,7 +138,9 @@ function Show-Help {
     Write-Host "└──────────────────────────────────────────────────────┘"
     Write-Host " " # Empty Line
 }
+#endregion
 
+#region Information Message
 function Show-Information {
     # Header
     Write-Host " " # Empty Line
@@ -137,6 +151,9 @@ function Show-Information {
     
     Write-Host "  Version: " -NoNewLine; Write-Host $Global:VersionStr -ForegroundColor "Blue"
     Write-Host "  Developer: " -NoNewLine; Write-Host "Andy" -ForegroundColor "Blue"
+    Write-Host " " # Empty Line
+    Write-Host "  Github: " -NoNewLine; Write-Host "https://github.com/at0ms/powershell-profile" -ForegroundColor "Blue"
+    Write-Host "  Release Notes: " -NoNewLine; Write-Host "https://github.com/at0ms/powershell-profile/blob/main/release-notes.md" -ForegroundColor "Blue"
 
     # Footer
     Write-Host " " # Empty Line
@@ -145,7 +162,8 @@ function Show-Information {
     Write-Host "└──────────────────────────────────────────────────────┘"
     Write-Host " " # Empty Line
 }
+#endregion
 
-# Set Alias Names
+# Set our alias Names
 Set-Alias -Name psh -Value Show-Help
 Set-Alias -Name psi -Value Show-Information
