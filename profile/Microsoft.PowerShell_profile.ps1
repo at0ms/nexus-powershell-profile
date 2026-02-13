@@ -1,13 +1,13 @@
 ﻿#==================================================================================================
 # Powershell Profile
 #==================================================================================================
-# Version: 1.0.4
+# Version: 1.0.5
 #==================================================================================================
 
 #==================================================================================================
 # Global Variables
 #==================================================================================================
-$Global:VersionStr = "1.0.4"
+$Global:VersionStr = "1.0.5"
 $Global:SessionInitMessage = $false # (disabled by default).
 $Global:HeaderWidth = 50
 $Global:SectionPadding = 2
@@ -18,9 +18,10 @@ $Global:SectionOptionPadding = 2
 #==================================================================================================
 
 # Cache command existence checks for performance (single PATH search)
-$availableCommands = (Get-Command oh-my-posh -CommandType Application -ErrorAction Ignore).Name -replace '\.exe$', ''
+$availableCommands = (Get-Command oh-my-posh, subl -CommandType Application -ErrorAction Ignore).Name -replace '\.exe$', ''
 $Commands = @{
     OhMyPosh = 'oh-my-posh' -in $availableCommands
+    SublimeText = 'subl' -in $availableCommands
 }
 
 #==================================================================================================
@@ -77,7 +78,7 @@ function Write-Section {
     # Write line
     Write-Host ($pad + ("─" * $Width))
 
-    Write-EmptyLine
+    #Write-EmptyLine
 }
 
 function Write-SectionOption {
@@ -125,18 +126,46 @@ function Set-PSReadLineOptionsCompat {
     }
 }
 
+function Test-GitHubConnection {
+    if ($PSVersionTable.PSEdition -eq "Core") {
+        # If PowerShell Core, use a 1 second timeout
+        return Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
+    } else {
+        # For PowerShell Desktop, use .NET Ping class with timeout
+        $ping = New-Object System.Net.NetworkInformation.Ping
+        $result = $ping.Send("github.com", 1000)  # 1 second timeout
+        return ($result.Status -eq "Success")
+    }
+}
+
 #==================================================================================================
-# Help Message
+# Editor
 #==================================================================================================
-function Show-Help {
+if ($EDITOR_Override) {
+    $EDITOR = $EDITOR_Override
+} else {
+    $EDITOR = if ($Commands.SublimeText) { 'subl' } # Sublime Text
+    else { "notepad" } # Default on windows
+}
+
+#==================================================================================================
+# Profile Commands
+#==================================================================================================
+function Show-Profile-Help {
     # Header
     Write-Header "Help" -Width $Global:HeaderWidth
 
-    # General
-    Write-Section "General" -Width ($Global:HeaderWidth - ($Global:SectionPadding * 2) + 2) -LeftPadding $Global:SectionPadding
+    # Shortcuts
+    Write-Section "Shortcuts" -Width ($Global:HeaderWidth - ($Global:SectionPadding * 2) + 2) -LeftPadding $Global:SectionPadding
+    Write-SectionOption "edit" -LeftPadding $Global:SectionOptionPadding -SameLine $true -TextColour "Green"; Write-Host " - Shortcut for opening files (Chooses the best editor based on whats installed)"
+    Write-SectionOption "omp" -LeftPadding $Global:SectionOptionPadding -SameLine $true -TextColour "Green"; Write-Host " - Shortcut for oh-my-posh"
+    Write-EmptyLine
 
+    # Profile
+    Write-Section "Profile" -Width ($Global:HeaderWidth - ($Global:SectionPadding * 2) + 2) -LeftPadding $Global:SectionPadding
     Write-SectionOption "psh" -LeftPadding $Global:SectionOptionPadding -SameLine $true -TextColour "Green"; Write-Host " - Shows this help message."
-    Write-SectionOption "psi" -LeftPadding $Global:SectionOptionPadding -SameLine $true -TextColour "Green"; Write-Host " - Shows infomation about the script."
+    Write-SectionOption "psi" -LeftPadding $Global:SectionOptionPadding -SameLine $true -TextColour "Green"; Write-Host " - Shows infomation about the profile."
+    Write-SectionOption "prss" -LeftPadding $Global:SectionOptionPadding -SameLine $true -TextColour "Green"; Write-Host " - Runs PowerShell Profile setup script. (Internet Required)"
     Write-EmptyLine
 
     # Information
@@ -153,19 +182,14 @@ function Show-Help {
     Write-Header "" -Width $Global:HeaderWidth
 }
 
-#==================================================================================================
-# Information Message
-#==================================================================================================
-function Show-Information {
+function Show-Profile-Information {
     # Header
     Write-Header "Information" -Width $Global:HeaderWidth
     
     # Information
     Write-SectionOption "Version: " -LeftPadding $Global:SectionOptionPadding -SameLine $true; Write-Host $Global:VersionStr -ForegroundColor "Blue"
     Write-SectionOption "Developer: " -LeftPadding $Global:SectionOptionPadding -SameLine $true; Write-Host "Andy" -ForegroundColor "Blue"
-    
     Write-EmptyLine
-
     Write-SectionOption "Github: " -LeftPadding $Global:SectionOptionPadding -SameLine $true; Write-Host "https://github.com/at0ms/powershell-profile" -ForegroundColor "Blue"
     Write-SectionOption "Release Notes: " -LeftPadding $Global:SectionOptionPadding -SameLine $true; Write-Host "https://github.com/at0ms/powershell-profile/blob/main/release-notes.md" -ForegroundColor "Blue"
 
@@ -174,11 +198,26 @@ function Show-Information {
     Write-Header "" -Width $Global:HeaderWidth
 }
 
+function Run-Profile-Setup-Script {
+    if(Test-GitHubConnection) {
+        irm "https://github.com/at0ms/powershell-profile/raw/main/scripts/setup.ps1" | iex
+    } else {
+        Write-Warning "Cannot connect to github.com."
+    }
+}
+
 #==================================================================================================
 # Custom Command Aliases
 #==================================================================================================
-Set-Alias -Name psh -Value Show-Help
-Set-Alias -Name psi -Value Show-Information
+
+# Shortcuts
+Set-Alias -Name edit -Value $EDITOR
+Set-Alias -Name omp -Value oh-my-posh
+
+# Profile
+Set-Alias -Name psh -Value Show-Profile-Help
+Set-Alias -Name psi -Value Show-Profile-Information
+Set-Alias -Name prss -Value Run-Profile-Setup-Script
 
 #==================================================================================================
 # Session Initialization

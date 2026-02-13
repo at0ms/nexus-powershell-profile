@@ -41,11 +41,18 @@ irm "https://github.com/at0ms/powershell-profile/raw/main/scripts/setup.ps1" | i
 
 ## Commands
 <details>
-  <summary>General</summary>
-  <br>
+  <summary>Shortcuts</summary>
+  <ul>
+    <li>edit - Shortcut for opening files (Chooses the best editor based on whats installed)</li>
+    <li>omp - Shortcut for oh-my-posh</li>
+  </ul>
+</details>
+<details>
+  <summary>Profile</summary>
   <ul>
     <li>psh - Shows help message.</li>
     <li>psi - Shows infomation about the script.</li>
+    <li>prss - Runs PowerShell Profile setup script.</li>
   </ul>
 </details>
 
